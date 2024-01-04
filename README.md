@@ -1,5 +1,4 @@
 # GenotypeFilters
-
 This repository contains scripts and reference data for filtering genotype data. 
 
 ## ACMG filter
@@ -8,8 +7,16 @@ Initially, the ACMG filter has been created. This will take in vcf format genoty
 The list of ACMG variants was created by linking the ACMG variants to ClinVar. 
 ![acmg](ACMG_variants.png)
 
+### Requirements and recommendations
+The ACMGfilter script requires 
+- python >=3.9
+- pandas >=2
+- pyarrow backend for pandas v2
+
 It is recommended to subset the input vcf file by chromosome and run the chromosomes in parallel. The input vcf file must have a header (```['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]```) and optionally the vcf format info lines started by "##". 
 
+
+### Usage 
 ```
 usage: match_filter_vcf.py [-h] --input-vcf INPUT_FILE
                            [--human-genome {37,38,37,38}]

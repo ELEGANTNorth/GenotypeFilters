@@ -40,114 +40,221 @@ acmg_filter = pd.read_table(args.acmg_path, engine='pyarrow', dtype_backend='pya
 acmg_filter = acmg_filter.loc[acmg_filter.Assembly == f'GRCh{args.hg}']
 print('\tColumns of ACMG filter data:', acmg_filter.columns, '\n\tWith shape:', acmg_filter.shape)
 
-# Check if the file was gzipped 
 # File can now be opened and read line by line 
 flag = False
-#kept = 0
+# kept = 0
 removed = 0
 totalLines = 0
 
-print('\n# Data is not gzipped.')
-infile = open(args.input_file, 'r')
-outfile = open(args.output_file, 'w')
+# Check if the file was gzipped 
+if args.input_file[-3:] == ".gz": 
+    print('\n# Data is gzipped.')
+    infile = gzip.open(args.input_file, 'rb')
+    outfile = gzip.open(args.output_file, 'wb')
 
-if args.snps_only: 
-    # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
-    for line0 in infile: 
-        # Now a line was found
-        if flag: 
-            totalLines += 1
-            line = line0[:-1].split()
+    # Check if only SNPs
+    if args.snps_only: 
+        # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
+        for line0 in infile: 
+            # Now a line was found
+            if flag: 
+                totalLines += 1
+                line = line0.split()
 
-            # CHeck if new chromosome
-            if CHR != line[idx_chr]:
-                acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == line[idx_chr]]
-                print("New ACMG subset:", acmg_sub.shape)
+                # CHeck if new chromosome
+                current_chr = line[idx_chr].decode()
+                if CHR != current_chr:
+                    acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == current_chr]
+                    print("New ACMG subset:", acmg_sub.shape)
 
-                # Make variables ready for next line 
-                CHR = line[idx_chr]
+                    # Make variables ready for next line 
+                    CHR = line[idx_chr]
 
-            # Check if position matches
-            match = acmg_sub.loc[acmg_sub.PositionVCF == int(line[idx_pos])]
-            # if line[idx_pos] in acmg_sub.PositionVCF: 
-            if match.shape[0] > 0: 
-                removed += 1
-                continue
-            elif len(line[idx_ref]) > 2 or len(line[idx_alt]) > 2: 
-                removed += 1
-                continue
+                # Check if position matches
+                current_pos = int(line[idx_pos].decode())
+                match = acmg_sub.loc[acmg_sub.PositionVCF == current_pos]
+                if match.shape[0] > 0: 
+                    removed += 1
+                    continue
+                elif len(line[idx_ref]) > 2 or len(line[idx_alt]) > 2: 
+                    removed += 1
+                    continue
+                else: 
+                    # kept += 1
+                    outfile.write(line0)
+
+            # Simply re-write the lines of info to the filtered out
+            elif line0.startswith(b"##"): 
+                outfile.write(line0)
             else: 
-                # kept += 1
+                # The header was found
+                flag = True
+                header = line0.decode().split()
+                print('\n### Number of columns in file:', len(header))
+
+                # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
+                print('Info fields:', header[:10])
+
+                # Get indexes to save 
+                idx_chr = header.index('#CHROM')
+                idx_pos = header.index('POS')
+                idx_ref = header.index('REF')
+                idx_alt = header.index('ALT')
+                CHR = "0"
+
+                # Write the header to out
+                outfile.write(line0)
+    else: 
+        # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
+        for line0 in infile: 
+            # Now a line was found
+            if flag: 
+                totalLines += 1
+                line = line0.split()
+
+                # CHeck if new chromosome
+                current_chr = line[idx_chr].decode()
+                if CHR != current_chr:
+                    acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == current_chr]
+                    print("New ACMG subset:", acmg_sub.shape)
+
+                    # Make variables ready for next line 
+                    CHR = line[idx_chr]
+
+                # Check if position matches
+                current_pos = int(line[idx_pos].decode())
+                match = acmg_sub.loc[acmg_sub.PositionVCF == current_pos]
+                if match.shape[0] > 0: 
+                    removed += 1
+                    continue
+                else: 
+                    # kept += 1
+                    outfile.write(line0)
+
+            # Simply re-write the lines of info to the filtered out
+            elif line0.startswith(b"##"): 
+                outfile.write(line0)
+            else: 
+                # The header was found
+                flag = True
+                header = line0.decode().split()
+                print('\n### Number of columns in file:', len(header))
+
+                # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
+                print('Info fields:', header[:10])
+
+                # Get indexes to save 
+                idx_chr = header.index('#CHROM')
+                idx_pos = header.index('POS')
+                idx_ref = header.index('REF')
+                idx_alt = header.index('ALT')
+                CHR = "0"
+
+                # Write the header to out
                 outfile.write(line0)
 
-        # Simply re-write the lines of info to the filtered out
-        elif line0[:2] == "##": 
-            outfile.write(line0)
-        else: 
-            # The header was found
-            flag = True
-            header = line0[:-1].split()
-            print('\n### Number of columns in file:', len(header))
-
-            # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
-            print('Info fields:', header[:10])
-
-            # Get indexes to save 
-            idx_chr = header.index('#CHROM')
-            idx_pos = header.index('POS')
-            idx_ref = header.index('REF')
-            idx_alt = header.index('ALT')
-            CHR = "0"
-
-            # Write the header to out
-            outfile.write(line0)
+# Data is not gzipped
 else: 
-    # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
-    for line0 in infile: 
-        # Now a line was found
-        if flag: 
-            totalLines += 1
-            line = line0[:-1].split()
+    print('\n# Data is not gzipped.')
+    infile = open(args.input_file, 'r')
+    outfile = open(args.output_file, 'w')
 
-            # CHeck if new chromosome
-            if CHR != line[idx_chr]:
-                acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == line[idx_chr]]
-                print("New ACMG subset:", acmg_sub.shape)
+    if args.snps_only: 
+        # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
+        for line0 in infile: 
+            # Now a line was found
+            if flag: 
+                totalLines += 1
+                line = line0.split()
 
-                # Make variables ready for next line 
-                CHR = line[idx_chr]
+                # CHeck if new chromosome
+                if CHR != line[idx_chr]:
+                    acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == line[idx_chr]]
+                    print("New ACMG subset:", acmg_sub.shape)
 
-            # Check if position matches
-            match = acmg_sub.loc[acmg_sub.PositionVCF == int(line[idx_pos])]
-            # if line[idx_pos] in acmg_sub.PositionVCF: 
-            if match.shape[0] > 0: 
-                removed += 1
-                continue
-            else: 
-                # kept += 1
+                    # Make variables ready for next line 
+                    CHR = line[idx_chr]
+
+                # Check if position matches
+                match = acmg_sub.loc[acmg_sub.PositionVCF == int(line[idx_pos])]
+                # if line[idx_pos] in acmg_sub.PositionVCF: 
+                if match.shape[0] > 0: 
+                    removed += 1
+                    continue
+                elif len(line[idx_ref]) > 2 or len(line[idx_alt]) > 2: 
+                    removed += 1
+                    continue
+                else: 
+                    # kept += 1
+                    outfile.write(line0)
+
+            # Simply re-write the lines of info to the filtered out
+            elif line0.startswith("##"): 
                 outfile.write(line0)
+            else: 
+                # The header was found
+                flag = True
+                header = line0.split()
+                print('\n### Number of columns in file:', len(header))
 
-        # Simply re-write the lines of info to the filtered out
-        elif line0[:2] == "##": 
-            outfile.write(line0)
-        else: 
-            # The header was found
-            flag = True
-            header = line0[:-1].split()
-            print('\n### Number of columns in file:', len(header))
+                # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
+                print('Info fields:', header[:10])
 
-            # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
-            print('Info fields:', header[:10])
+                # Get indexes to save 
+                idx_chr = header.index('#CHROM')
+                idx_pos = header.index('POS')
+                idx_ref = header.index('REF')
+                idx_alt = header.index('ALT')
+                CHR = "0"
 
-            # Get indexes to save 
-            idx_chr = header.index('#CHROM')
-            idx_pos = header.index('POS')
-            idx_ref = header.index('REF')
-            idx_alt = header.index('ALT')
-            CHR = "0"
+                # Write the header to out
+                outfile.write(line0)
+    else: 
+        # Iterate through the lines of the file and check for chr number to ensure smaller subset of the acmg set is needed 
+        for line0 in infile: 
+            # Now a line was found
+            if flag: 
+                totalLines += 1
+                line = line0.split()
 
-            # Write the header to out
-            outfile.write(line0)
+                # CHeck if new chromosome
+                if CHR != line[idx_chr]:
+                    acmg_sub = acmg_filter.loc[acmg_filter.Chromosome == line[idx_chr]]
+                    print("New ACMG subset:", acmg_sub.shape)
+
+                    # Make variables ready for next line 
+                    CHR = line[idx_chr]
+
+                # Check if position matches
+                match = acmg_sub.loc[acmg_sub.PositionVCF == int(line[idx_pos])]
+                if match.shape[0] > 0: 
+                    removed += 1
+                    continue
+                else: 
+                    # kept += 1
+                    outfile.write(line0)
+
+            # Simply re-write the lines of info to the filtered out
+            elif line0.startswith("##"): 
+                outfile.write(line0)
+            else: 
+                # The header was found
+                flag = True
+                header = line0.split()
+                print('\n### Number of columns in file:', len(header))
+
+                # VCF line format: ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', ... samples]
+                print('Info fields:', header[:10])
+
+                # Get indexes to save 
+                idx_chr = header.index('#CHROM')
+                idx_pos = header.index('POS')
+                idx_ref = header.index('REF')
+                idx_alt = header.index('ALT')
+                CHR = "0"
+
+                # Write the header to out
+                outfile.write(line0)
 
 # Close the file 
 infile.close()

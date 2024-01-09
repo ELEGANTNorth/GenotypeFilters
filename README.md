@@ -29,7 +29,7 @@ variants.
 optional arguments:
   -h, --help            show this help message and exit
   --input-vcf INPUT_FILE
-                        Path to input vcf format file containing variants to
+                        Path to input variant call format (.vcf) file containing variants to
                         be filtered.
   --human-genome {37,38,37,38}
                         Specifies the human genome reference version to use.
@@ -46,3 +46,9 @@ optional arguments:
                         Path to output vcf format file containing filtered
                         variants.
 ```
+
+
+## SNPplatforms
+This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script assumes that the platform is provides as an Illumina manifest file, and the input data to be filtered can be either variant call format (.vcf) or PLINK's binary file format (.bed, .bim, .fam). 
+
+

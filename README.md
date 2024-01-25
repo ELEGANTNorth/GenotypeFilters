@@ -57,8 +57,8 @@ This section describes a filtering script for selecting the SNPs matching a part
 Usage: elegant_filter_gatk.sh [-h] 
     -i | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
     -hg | --human-genome   - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
-    -p | --positions       - Path to provided reference file containing positions to keep from the vcf input.
-    -g | --gatk-path       - Path to the gatk toolkit (Default: "gatk").
+    -p | --positions       - Path to interval list of positions to include in gzipped format.
+    -g | --gatk-path       - Path to the gatk toolkit. Default: gatk.
     -o | --out             - Output path for the filtered file.
     -h | --help            - Print Usage message.
 

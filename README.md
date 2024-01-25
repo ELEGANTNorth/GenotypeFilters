@@ -49,6 +49,21 @@ optional arguments:
 
 
 ## SNPplatforms
-This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script assumes that the platform is provides as an Illumina manifest file, and the input data to be filtered can be either variant call format (.vcf) or PLINK's binary file format (.bed, .bim, .fam). 
+This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
+
+
+### Usage
+```
+Usage: elegant_filter_gatk.sh [-h] 
+    -i | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
+    -hg | --human-genome   - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
+    -p | --positions       - Path to provided reference file containing positions to keep from the vcf input.
+    -g | --gatk-path       - Path to the gatk toolkit (Default: "gatk").
+    -o | --out             - Output path for the filtered file.
+    -h | --help            - Print Usage message.
+
+```
+
+
 
 

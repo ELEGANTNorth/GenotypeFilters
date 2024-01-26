@@ -1,6 +1,24 @@
 # GenotypeFilters
 This repository contains scripts and reference data for filtering genotype data. 
 
+## SNPplatforms
+This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
+
+
+### Usage
+```
+Usage: elegant_filter_gatk.sh [-h] 
+    -i | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
+    -hg | --human-genome   - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
+    -p | --positions       - Path to interval list of positions to include in gzipped format. The file contains columns snpID, rsID (if available) and position given as zero-indexed. Be sure to download the file matching your reference genome. 
+    -g | --gatk-path       - Path to the gatk toolkit. Default: gatk.
+    -p | --padding         - Number of bases to add padding around the included intervals. Default: 1.
+    -o | --out             - Output path for the filtered file.
+    -h | --help            - Print Usage message.
+
+```
+
+
 ## ACMG filter
 Initially, the ACMG filter has been created. This will take in vcf format genotype data files and exclude all variants that match positions in the accompanying ```clinvar_acmg3.2_subset.txt.gz```. The positions are listed with both assembly GRCh37 and 38, but the python program ```match_filter_vcf.py``` has the flag ```--human-genome```, where one of the two can be specified. 
 
@@ -48,21 +66,7 @@ optional arguments:
 ```
 
 
-## SNPplatforms
-This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
 
-
-### Usage
-```
-Usage: elegant_filter_gatk.sh [-h] 
-    -i | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
-    -hg | --human-genome   - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
-    -p | --positions       - Path to interval list of positions to include in gzipped format.
-    -g | --gatk-path       - Path to the gatk toolkit. Default: gatk.
-    -o | --out             - Output path for the filtered file.
-    -h | --help            - Print Usage message.
-
-```
 
 
 

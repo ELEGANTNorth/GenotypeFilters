@@ -76,10 +76,12 @@ gzip -dc $POS | cut -d" " -f3 > $POS.GRCh${HG}.list
 # Get the contig lengths
 if [[ "$INVCF" == *.gz ]]; then
     echo "this file is zipped"
-    Rscript -e "con <- gzfile('$INVCF'); data1 <- readLines(con, warn = FALSE); flag <- TRUE; for (line in data1) { if (!startsWith(line, '##')) { break } else if (startsWith(line, '##contig=')) {cat(line, '\n') } }; close(con)" > contig_lengths.txt
+    # python -c "import gzip; infile = gzip.open('$INVCF', 'rb'); print(''.join(line.decode('utf-8') for line in infile.readlines() if line.decode('utf-8').startswith('##contig'))[:infile.tell()]); infile.close();" > contig_lengths.txt
+    Rscript -e "con <- gzfile('$INVCF');count <- 1;flag <- TRUE;while (flag) {line <- scan(con, skip = count-1, nlines = 1, what = 'character', sep=NULL, quiet=TRUE)[1];if (!startsWith(line, '##')) { flag <- FALSE } else if (startsWith(line, '##contig=')) { cat(line, '\n') };print(line);count <- count + 1; }; close(con)" > contig_lengths.txt
 else 
     echo "this file is not zipped"
-    Rscript -e "con <- file('$INVCF'); data1 <- readLines(con, warn = FALSE); flag <- TRUE; for (line in data1) { if (!startsWith(line, '##')) { break } else if (startsWith(line, '##contig=')) {cat(line, '\n') } }; close(con)" > contig_lengths.txt
+    # python -c "infile = gzip.open('$INVCF', 'rb'); print(''.join(line.decode('utf-8') for line in infile.readlines() if line.decode('utf-8').startswith('##contig'))[:infile.tell()]); infile.close();" > contig_lengths.txt
+    Rscript -e "con <- file('$INVCF');count <- 1;flag <- TRUE;while (flag) {line <- scan(con, skip = count-1, nlines = 1, what = 'character', sep=NULL, quiet=TRUE)[1];if (!startsWith(line, '##')) { flag <- FALSE } else if (startsWith(line, '##contig=')) { cat(line, '\n') }; count <- count + 1; }; close(con)" > contig_lengths.txt
 fi
 
 # Check the contig lengths can contain all the positions needed 

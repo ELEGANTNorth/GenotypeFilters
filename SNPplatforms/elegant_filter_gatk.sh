@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Bash shell program to run the ELEGANT filters using GATK toolkit
-# Last updated: January 25th, 2024
+# Last updated: January 30th, 2024
 
 ## SET DEFAULTS 
 GATKPATH=gatk
@@ -76,17 +76,14 @@ gzip -dc $POS | cut -d" " -f3 > $POS.GRCh${HG}.list
 # Get the contig lengths
 if [[ "$INVCF" == *.gz ]]; then
     echo "this file is zipped"
-    # python -c "import gzip; infile = gzip.open('$INVCF', 'rb'); print(''.join(line.decode('utf-8') for line in infile.readlines() if line.decode('utf-8').startswith('##contig'))[:infile.tell()]); infile.close();" > contig_lengths.txt
-    Rscript -e "con <- gzfile('$INVCF');count <- 1;flag <- TRUE;while (flag) {line <- scan(con, skip = count-1, nlines = 1, what = 'character', sep=NULL, quiet=TRUE)[1];if (!startsWith(line, '##')) { flag <- FALSE } else if (startsWith(line, '##contig=')) { cat(line, '\n') };print(line);count <- count + 1; }; close(con)" > contig_lengths.txt
+    Rscript -e "con <- gzfile('$INVCF');count <- 1;flag <- TRUE;while (flag) {line <- scan(con, skip = count-1, nlines = 1, what = 'character', sep=NULL, quiet=TRUE)[1];if (!startsWith(line, '##')) { flag <- FALSE } else if (startsWith(line, '##contig=')) { cat(line, '\n') };count <- count + 1; }; close(con)" > contig_lengths.txt
 else 
     echo "this file is not zipped"
-    # python -c "infile = gzip.open('$INVCF', 'rb'); print(''.join(line.decode('utf-8') for line in infile.readlines() if line.decode('utf-8').startswith('##contig'))[:infile.tell()]); infile.close();" > contig_lengths.txt
     Rscript -e "con <- file('$INVCF');count <- 1;flag <- TRUE;while (flag) {line <- scan(con, skip = count-1, nlines = 1, what = 'character', sep=NULL, quiet=TRUE)[1];if (!startsWith(line, '##')) { flag <- FALSE } else if (startsWith(line, '##contig=')) { cat(line, '\n') }; count <- count + 1; }; close(con)" > contig_lengths.txt
 fi
 
 # Check the contig lengths can contain all the positions needed 
-Rscript -e "data1 <- readLines('contig_lengths.txt', warn = FALSE); data2 <- readLines('$POS.GRCh${HG}.list', warn = FALSE); dict1 <- list(); flag <- TRUE; for (entry in data1) { if (!startsWith(entry, '##')) { break } else if (startsWith(entry, '##contig=')) { key <- sub('.*ID=([0-9]+),.*', '\\1', entry); value <- as.integer(sub('.*length=(\\d+)>.*', '\\1', entry)); dict1[[key]] <- value } };for (entry in data2) { key <- sub('^(.*):.*', '\\1', entry); value <- as.integer(sub('.*-(\\d+)$', '\\1', entry)); if (!is.na(value) && key %in% names(dict1) && dict1[[key]] > value) { cat(entry, '\n') } };" > $POS.GRCh${HG}_filtered.list
-
+Rscript -e "library(tidyverse); options(scipen = 999); data1 <- readLines('contig_lengths.txt', warn = FALSE); dict1 <- list(); for (entry in data1) { if (!startsWith(entry, '##')) { break } else if (startsWith(entry, '##contig=')) { key <- sub('.*ID=([0-9]+),.*', '\\\1', entry); value <- as.integer(sub('.*length=(\\\d+)>.*', '\\\1', entry)); dict1[[key]] <- value }; }; positions <- read_delim('$POS.GRCh${HG}.list', delim=':', col_names=c('CHR', 'POS')) %>% separate_wider_delim(POS, delim='-', names=c('start', 'stop')) %>% mutate(stop = as.integer(stop)); rows <- data.frame(); for (key in names(dict1)){ key_set <- dplyr::filter(positions, CHR == key); rows <- bind_rows(rows, dplyr::filter(key_set, stop < dict1[[key]]))}; rows %>% mutate(start = as.character(as.integer(start)), stop = as.character(stop)) %>% unite(start, stop, col = 'POS', sep = '-') %>% unite(CHR, POS, col = 'X', sep = ':') %>% write_delim('$POS.GRCh${HG}_filtered.list', delim=' ', col_names=FALSE)"
 # clean-up 
 rm contig_lengths.txt
 rm $POS.GRCh${HG}.list

@@ -4,17 +4,24 @@ This repository contains scripts and reference data for filtering genotype data.
 ## SNPplatforms
 This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
 
+### Requirements and recommendations
+- R >=3.6.1 (with tidyverse)
+- GATK >=4.4.0.0
+- Interval lists downloaded to match your respective reference genome (b37 or b38)
+- The input vcf files must follow the vcf format >=v4.1
 
 ### Usage
 ```
 Usage: elegant_filter_gatk.sh [-h] 
-    -i | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
+    -i  | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
+    -pf | --prefix-chr     - Prefix (e.g. "chr") on the chromosome column of the vcf file. Default: .
     -hg | --human-genome   - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
-    -p | --positions       - Path to interval list of positions to include in gzipped format. The file contains columns snpID, rsID (if available) and position given as zero-indexed. Be sure to download the file matching your reference genome. 
-    -g | --gatk-path       - Path to the gatk toolkit. Default: gatk.
-    -p | --padding         - Number of bases to add padding around the included intervals. Default: 1.
-    -o | --out             - Output path for the filtered file.
-    -h | --help            - Print Usage message.
+    -b  | --positions       - Path to interval list of positions to include in gzipped format. The file contains columns snpID, rsID (if available) and position given as zero-indexed. Be sure to download the file matching your reference genome. 
+    -g  | --gatk-path       - Path to the gatk toolkit. Default: gatk.
+    -m  | --memory          - Memory allocation in G to use for java-specific arguments. Default: 4.
+    -p  | --padding         - Number of bases to add padding around the included intervals. Default: 1.
+    -o  | --out             - Output path for the filtered file.
+    -h  | --help            - Print Usage message.
 
 ```
 

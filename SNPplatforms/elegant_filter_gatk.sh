@@ -18,12 +18,12 @@ MEM=4
 function usage()
 {
     echo -e "\nUsage:"
-    echo -e "\t-i  | --input-vcf\t\t- Variant call format input file (.vcf or .vcf.gz)."
-    echo -e "\t-pf | --prefix-chr\t\t- Prefix on the chromosome column of the input-vcf. Default: \"\"."
-    echo -e "\t-hg | --human-genome\t\t- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37."
-    echo -e "\t-b  | --positions\t\t- Path to interval list of positions to include in gzipped format. The file contains columns snpID, rsID (if available) and position given as zero-indexed. Be sure to download the file matching your reference genome. "
+    echo -e "\t-i  | --input-vcf\t- Variant call format input file (.vcf or .vcf.gz)."
+    echo -e "\t-pf | --prefix-chr\t- Prefix on the chromosome column of the input-vcf. Default: \"\"."
+    echo -e "\t-hg | --human-genome\t- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37."
+    echo -e "\t-b  | --positions\t- Path to interval list of positions to include in gzipped format.\n\t\t\t\t  The file contains columns snpID, rsID (if available) and position given as zero-indexed.\n\t\t\t\t  Be sure to download the file matching your reference genome. "
     echo -e "\t-p  | --padding\t\t- Number of bases to add padding around the included intervals. Default: 1."
-    echo -e "\t-g  | --gatk-path\t\t- Path to the gatk toolkit. Default: gatk."
+    echo -e "\t-g  | --gatk-path\t- Path to the gatk toolkit. Default: gatk."
     echo -e "\t-m  | --memory\t\t- Memory allocation in G to use for java-specific arguments. Default: 4."
     echo -e "\t-o  | --out\t\t- Output path for the filtered file."
     echo -e "\t-h  | --help\t\t- Print Usage message. "

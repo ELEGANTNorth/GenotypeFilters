@@ -8,7 +8,7 @@ GATKPATH=gatk
 PREFIXCHR=""
 HG=37
 POS=gatk_intervals_b37.txt.gz
-PADDING=0
+PADDING=1
 MEM=4
 
 ##################

@@ -4,10 +4,6 @@ This repository contains scripts and reference data for filtering genotype data.
 ## SNPplatforms
 This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
 
-Please note, that the provided interval lists were filtered to exclude the ACMG variants classified to be reported back (ACMG v3.2, 2023). The list of ACMG variants was created by linking the ACMG genes and classification to ClinVar. 
-![acmg](ACMG_variants.png)
-
-
 ### Requirements and recommendations
 - R >=3.6.1 (with tidyverse)
 - GATK >=4.4.0.0
@@ -28,6 +24,20 @@ Usage: elegant_filter_gatk.sh [-h]
     -h  | --help            - Print Usage message.
 
 ```
+
+### Interval files 
+The interval lists needed for the ```--positions``` flag are located in ````GenotypeFilters/SNPplatforms/interval_lists``. Here, interval lists are available for two SNP arrays, namely Illumina's Infinium Omni2.5Exome v1.5 and Global diversity array (GDA) v1.0. A combined version of unique positions across these two arrays is also available. 
+The positions have been made available for two versions of the human genome reference: b37 \& b38. Make sure to use the positions list file that matches your version of the human genome used for calling variants. 
+
+| Array name                   | Version | \# of sites | File name                                       |
+|:-----------------------------|:--------|:------------|:------------------------------------------------|
+| Infinium Omni2.5Exome        | 1.5     |  ~2.6 mio.  | ```ilm_omni2.5exome_v1.5_intervals_b*.txt.gz``` |
+| Global diversity array (GDA) | 1.0     |  ~1.8 mio.  | ```gda_v1.0_intervals_b*.txt.gz```              |
+|                              |         |             |                                                 |
+
+Please note, that the provided interval lists were filtered to exclude the ACMG variants classified to be reported back (ACMG v3.2, 2023). The list of ACMG variants was created by linking the ACMG genes and classification to ClinVar. 
+![acmg](ACMG_variants.png)
+
 
 
 ## ACMG filter 

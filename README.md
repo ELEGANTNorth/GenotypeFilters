@@ -33,7 +33,7 @@ The positions have been made available for two versions of the human genome refe
 |:-----------------------------|:--------|:------------|:------------------------------------------------|
 | Infinium Omni2.5Exome        | 1.5     |  ~2.5 mio.  | ```ilm_omni2.5exome_v1.5_intervals_b*.txt.gz``` |
 | Global diversity array (GDA) | 1.0     |  ~1.8 mio.  | ```gda_v1.0_intervals_b*.txt.gz```              |
-|                              |         |             |                                                 |
+| Combined O2.5Ex \& GDA       |         |  ~3.6 mio.  | ```combined_ilm_omni2.5exome_v1.5_gda_v1.0_intervals_b3*.txt.gz``` |
 
 Please note, that the provided interval lists were filtered to exclude the ACMG variants classified to be reported back (ACMG v3.2, 2023). The list of ACMG variants was created by linking the ACMG genes and classification to ClinVar. 
 ![acmg](ACMG_variants.png)

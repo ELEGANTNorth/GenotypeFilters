@@ -8,7 +8,7 @@ This section describes a filtering script for selecting the SNPs matching a part
 - R >=3.6.1 (with tidyverse)
 - GATK >=4.4.0.0
 - Interval lists downloaded to match your respective reference genome (b37 or b38)
-- The input vcf files must follow the vcf format >=v4.1
+- The input vcf files must follow the vcf format >=v4.1 and be accompanied by an index. This can be created e.g. by ```bcftools index -t <path to file>.vcf.gz```.
 
 ### Usage
 ```

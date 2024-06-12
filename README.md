@@ -31,7 +31,7 @@ The positions have been made available for two versions of the human genome refe
 
 | Array name                   | Version | \# of sites | File name                                       |
 |:-----------------------------|:--------|:------------|:------------------------------------------------|
-| Infinium Omni2.5Exome        | 1.5     |  ~2.6 mio.  | ```ilm_omni2.5exome_v1.5_intervals_b*.txt.gz``` |
+| Infinium Omni2.5Exome        | 1.5     |  ~2.5 mio.  | ```ilm_omni2.5exome_v1.5_intervals_b*.txt.gz``` |
 | Global diversity array (GDA) | 1.0     |  ~1.8 mio.  | ```gda_v1.0_intervals_b*.txt.gz```              |
 |                              |         |             |                                                 |
 

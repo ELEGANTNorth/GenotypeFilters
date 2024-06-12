@@ -12,16 +12,19 @@ This section describes a filtering script for selecting the SNPs matching a part
 
 ### Usage
 ```
-Usage: elegant_filter_gatk.sh [-h] 
-    -i  | --input-vcf       - Variant call format input file (.vcf or .vcf.gz).
-    -pf | --prefix-chr      - Prefix (e.g. "chr") on the chromosome column of the vcf file. Default: .
-    -hg | --human-genome    - Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
-    -b  | --positions       - Path to interval list of positions to include in gzipped format. The file contains columns snpID, rsID (if available) and position given as 1-indexed. Be sure to download the file matching your reference genome. 
-    -g  | --gatk-path       - Path to the gatk toolkit. Default: gatk.
-    -m  | --memory          - Memory allocation in G to use for java-specific arguments. Default: 4.
-    -p  | --padding         - Number of bases to add padding around the included intervals. Default: 1.
-    -o  | --out             - Output path for the filtered file.
-    -h  | --help            - Print Usage message.
+Usage:
+	-i  | --input-vcf	- Variant call format input file (.vcf or .vcf.gz).
+	-pf | --prefix-chr	- Prefix on the chromosome column of the input-vcf. Default: "".
+	-hg | --human-genome	- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
+	-b  | --positions	- Path to interval list of positions to include in gzipped format.
+				  The file contains columns snpID, rsID (if available) and position given as zero-indexed.
+				  Be sure to download the file matching your reference genome. 
+	-p  | --padding		- Number of bases to add padding around the included intervals. Default: 1.
+	-g  | --gatk-path	- Path to the gatk toolkit. Default: gatk.
+	-m  | --memory		- Memory allocation in G to use for java-specific arguments. Default: 4.
+	-o  | --out		- Output path for the filtered file.
+	-h  | --help		- Print Usage message. 
+
 
 ```
 

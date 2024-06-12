@@ -40,7 +40,7 @@ Please note, that the provided interval lists were filtered to exclude the ACMG 
 
 
 
-## ACMG filter 
+## ACMG filter (deprecated)
 Initially, the ACMG filter has been created. This will take in vcf format genotype data files and exclude all variants that match positions in the accompanying ```clinvar_acmg3.2_subset.txt.gz```. The positions are listed with both assembly GRCh37 and 38, but the python program ```match_filter_vcf.py``` has the flag ```--human-genome```, where one of the two can be specified. 
 
 

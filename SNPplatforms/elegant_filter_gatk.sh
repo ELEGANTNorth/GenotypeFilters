@@ -17,7 +17,7 @@ MEM=4
 # Usage function 
 function usage()
 {
-    echo -e "\nUsage:"
+    echo -e "\nusage: ./elegant_filter_gatk.sh [--help] --input-vcf <file-path> [OTHER OPTIONS] --out <file-path>"
     echo -e "\t-i  | --input-vcf\t- Variant call format input file (.vcf or .vcf.gz)."
     echo -e "\t-pf | --prefix-chr\t- Prefix on the chromosome column of the input-vcf. Default: \"\"."
     echo -e "\t-hg | --human-genome\t- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37."

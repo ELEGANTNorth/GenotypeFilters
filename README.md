@@ -12,7 +12,8 @@ This section describes a filtering script for selecting the SNPs matching a part
 
 ### Usage
 ```
-Usage:
+usage: ./elegant_filter_gatk.sh [--help] --input-vcf <file-path> [OTHER OPTIONS] --out <file-path>
+
 	-i  | --input-vcf	- Variant call format input file (.vcf or .vcf.gz).
 	-pf | --prefix-chr	- Prefix on the chromosome column of the input-vcf. Default: "".
 	-hg | --human-genome	- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
@@ -29,7 +30,7 @@ Usage:
 ```
 
 ### Interval files 
-The interval lists needed for the ```--positions``` flag are located in ````GenotypeFilters/SNPplatforms/interval_lists``. Here, interval lists are available for two SNP arrays, namely Illumina's Infinium Omni2.5Exome v1.5 and Global diversity array (GDA) v1.0. A combined version of unique positions across these two arrays is also available. 
+The interval lists needed for the ```--positions``` flag are located in ```GenotypeFilters/SNPplatforms/interval_lists```. Here, interval lists are available for two SNP arrays, namely Illumina's Infinium Omni2.5Exome v1.5 and Global diversity array (GDA) v1.0. A combined version of unique positions across these two arrays is also available. 
 The positions have been made available for two versions of the human genome reference: b37 \& b38. Make sure to use the positions list file that matches your version of the human genome used for calling variants. 
 
 | Array name                   | Version | \# of sites | File name                                       |

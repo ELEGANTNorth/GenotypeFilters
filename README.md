@@ -5,10 +5,13 @@ This repository contains scripts and reference data for filtering genotype data.
 This section describes a filtering script for selecting the SNPs matching a particular genotype array, e.g. Illumina's Infinium Omni 2.5Exome v1.5 array. The script is run using bash shell, R and the Genome Analysis Toolkit (GATK). The genotype array is given as a gzipped interval list, which is provided in the folder in .gz format. 
 
 ### Requirements and recommendations
-- R >=3.6.1 (with tidyverse)
-- GATK >=4.4.0.0
+- R >=4.3.0 (with tidyverse)
+- GATK >=4.4.0.0 
+- Java v17 is required to run GATK v4.4.0.0
 - Interval lists downloaded to match your respective reference genome (b37 or b38)
 - The input vcf files must follow the vcf format >=v4.1 and be accompanied by an index. This can be created e.g. by ```bcftools index -t <path to file>.vcf.gz```.
+
+*Note:* GATK is run using the wrapper script as provided by GATK, meaning that the java options are passed through as described in this [GATK documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360035531892-GATK4-command-line-syntax). 
 
 ### Usage
 ```

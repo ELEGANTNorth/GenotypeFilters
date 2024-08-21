@@ -106,3 +106,4 @@ rm $POS.GRCh${HG}.list
 
 # RUN VARIANT SELECTION
 $GATKPATH --java-options "-Xmx${MEM}G" SelectVariants --variant $INVCF --L $POS.GRCh${HG}_filtered.list --interval-padding $PADDING --output $OUTVCF
+

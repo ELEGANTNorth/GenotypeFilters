@@ -17,7 +17,7 @@ This section describes a filtering script for selecting the SNPs matching a part
 
 ### Usage
 ```
-usage: ./elegant_filter_gatk.sh [--help] --input-vcf <file-path> [OTHER OPTIONS] --out <file-path>
+usage: ./wgs2snp_array.sh [--help] --input-vcf <file-path> [OTHER OPTIONS] --out <file-path>
 
 Usage:
 	-i  | --input-vcf	- Variant call format input file (.vcf or .vcf.gz).

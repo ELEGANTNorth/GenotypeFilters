@@ -13,10 +13,13 @@ This section describes a filtering script for selecting the SNPs matching a part
 
 *Note:* GATK is run using the wrapper script as provided by GATK, meaning that the java options are passed through as described in this [GATK documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360035531892-GATK4-command-line-syntax). 
 
+*NB!* ```elegant_filter_gatk.sh``` changed name to: ```wgs2snp_array.sh```
+
 ### Usage
 ```
 usage: ./elegant_filter_gatk.sh [--help] --input-vcf <file-path> [OTHER OPTIONS] --out <file-path>
 
+Usage:
 	-i  | --input-vcf	- Variant call format input file (.vcf or .vcf.gz).
 	-pf | --prefix-chr	- Prefix on the chromosome column of the input-vcf. Default: "".
 	-hg | --human-genome	- Specifies the human genome reference version to use. Accepts either 37 or 38. Default: 37.
@@ -24,10 +27,11 @@ usage: ./elegant_filter_gatk.sh [--help] --input-vcf <file-path> [OTHER OPTIONS]
 				  The file contains columns snpID, rsID (if available) and position given as zero-indexed.
 				  Be sure to download the file matching your reference genome. 
 	-p  | --padding		- Number of bases to add padding around the included intervals. Default: 1.
-	-g  | --gatk-path	- Path to the gatk toolkit. Default: gatk.
+	-w  | --no-wrapper	- Flag to deactivate the use of the GATK wrapper script, which is recommended way to run the toolkit. Default: Wrapper is used by default.
+	-g  | --gatk-path	- Path to the gatk toolkit, if the wrapper is not used, ".jar" file ending is added automatically. Default: gatk.
 	-m  | --memory		- Memory allocation in G to use for java-specific arguments. Default: 4.
 	-o  | --out		- Output path for the filtered file.
-	-h  | --help		- Print Usage message. 
+	-h  | --help		- Print Usage message.
 
 
 ```
